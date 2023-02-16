@@ -6,11 +6,14 @@
  * @flow strict-local
  */
 // Error to resolve -> JSON value '' of type NSString cannot be converted to a YGValue, did you forget the % or pt suffix
-
 import {StyleSheet, Text, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import Router from './router';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {useFonts} from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import {useCallback} from 'react';
 
 const Section = ({children, title}) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -39,10 +42,27 @@ const Section = ({children, title}) => {
 };
 
 const App = () => {
+  const [fontsLoaded] = useFonts({
+    'Material Icons': require('../ios/Fonts/MaterialIcons.ttf'),
+    'Font Awesome5': require('../ios/Fonts/FontAwesome5_Regular.ttf'),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
-    <NavigationContainer>
-      <Router />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Router />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
 

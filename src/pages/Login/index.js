@@ -6,6 +6,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 
 const Login = ({navigation}) => {
@@ -13,7 +14,7 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View
         style={{
           width: '70%',
@@ -21,7 +22,7 @@ const Login = ({navigation}) => {
           alignItems: 'center',
           backgroundColor: '#fff',
           borderRadius: 20,
-          borderColor: 'green',
+          borderColor: 'grey',
           borderWidth: 1,
           borderStyle: 'solid',
         }}>
@@ -61,7 +62,8 @@ const Login = ({navigation}) => {
               />
               <TextInput
                 style={styles.inputs}
-                placeholder="Password"
+                placeholder="Username"
+                placeholderTextColor={'black'}
                 secureTextEntry={true}
                 underlineColorAndroid="transparent"
                 onChangeText={password => setPassword({password})}
@@ -76,7 +78,7 @@ const Login = ({navigation}) => {
           </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderBottomWidth: 1,
     marginVertical: 5,
-    width: 250,
+    width: 220,
     height: 45,
     // marginBottom: 20,
     flexDirection: 'row',
@@ -119,14 +121,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 5,
-    width: 250,
+    width: 220,
     borderRadius: 30,
     // borderColor: 'purple',
     // borderWidth: 1,
     // borderStyle: 'solid',
   },
   loginButton: {
-    backgroundColor: '#00b5ec',
+    backgroundColor: '#1c94f7',
   },
   loginText: {
     color: 'white',
