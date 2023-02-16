@@ -6,12 +6,64 @@ import {
   SafeAreaView,
   TextInput,
   KeyboardAvoidingView,
+  FlatList,
 } from 'react-native';
 import React, {useState} from 'react';
 import {Icon} from 'react-native-elements';
+import ContactItem from '../../components/ContactItem';
 
 const Contact = ({navigation}) => {
   const [contactID, setContactID] = useState('');
+  const [contacts, setContacts] = useState([
+    {
+      id: 1,
+      name: 'fajar',
+    },
+    {
+      id: 2,
+      name: 'tantowi',
+    },
+    {
+      id: 3,
+      name: 'yaqin',
+    },
+    {
+      id: 4,
+      name: 'rahmat',
+    },
+    {
+      id: 5,
+      name: 'abang',
+    },
+    {
+      id: 6,
+      name: 'ikhsan',
+    },
+    {
+      id: 7,
+      name: 'yudi',
+    },
+    {
+      id: 8,
+      name: 'gemma',
+    },
+    {
+      id: 9,
+      name: 'rifqi',
+    },
+    {
+      id: 10,
+      name: 'yudi',
+    },
+    {
+      id: 11,
+      name: 'gemma',
+    },
+    {
+      id: 12,
+      name: 'rifqi',
+    },
+  ]);
 
   return (
     <SafeAreaView
@@ -42,21 +94,18 @@ const Contact = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.contactBody}>
-          <View style={styles.contactList}>
-            <TouchableOpacity
-              style={styles.contactItem}
-              onPress={() => navigation.navigate('Chat')}>
-              <View style={styles.contactIconOverlay}>
-                <Icon
-                  name="person"
-                  size={32}
-                  color={'white'}
-                  style={styles.contactIcon}
-                />
-              </View>
-              <Text style={styles.contactText}>Contact</Text>
-            </TouchableOpacity>
-          </View>
+          <FlatList
+            data={contacts}
+            renderItem={({item, index}) => (
+              <ContactItem
+                no={item.id}
+                name={item.name}
+                navigation={navigation}
+              />
+            )}
+            keyExtractor={item => item.id}
+            contentContainerStyle={styles.contactList}
+          />
         </View>
         <TouchableOpacity
           style={styles.buttonLogOut}
@@ -70,7 +119,6 @@ const Contact = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     maxHeight: '100%',
     maxWidth: '100%',
     width: '100%',
@@ -137,7 +185,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonLogOut: {
-    width: '30%',
+    width: '40%',
     alignSelf: 'center',
     paddingVertical: 10,
     backgroundColor: '#FFFFFF',
@@ -152,41 +200,20 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   contactBody: {
-    flexDirection: 'column',
-    marginVertical: 10,
+    // flexDirection: 'column',
+    height: '78%',
+    marginVertical: '2.75%',
     borderTopColor: '#8D8D8D',
     borderTopWidth: 4,
     borderBottomColor: '#8D8D8D',
     borderBottomWidth: 4,
-  },
-  contactList: {
-    minHeight: '80%',
-    maxHeight: '100%',
     // borderWidth: 1,
-    // borderColor: 'red',
+    // borderColor: 'green',
     // borderStyle: 'solid',
   },
-  contactItem: {
-    flexDirection: 'row',
-    marginVertical: 10,
-    padding: 10,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    backgroundColor: '#E7E7E7',
-  },
-  contactIconOverlay: {
-    padding: 5,
-    backgroundColor: '#1C94F7',
-    borderWidth: 0,
-    borderStyle: 'solid',
-    borderRadius: 20,
-  },
-  contactText: {
-    paddingLeft: 20,
-    alignItems: 'center',
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
+  contactList: {
+    flexGrow: 1,
+    marginVertical: '2%',
   },
 });
 
