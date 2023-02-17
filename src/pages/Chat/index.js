@@ -8,6 +8,8 @@ import {
   TextInput,
   Platform,
   FlatList,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import {useState} from 'react';
 import {Icon} from 'react-native-elements';
@@ -86,27 +88,26 @@ const Chat = ({navigation}) => {
       sentID: 'ikhsan',
     },
   ]);
+
   return (
-    <SafeAreaView
-      style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
         <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.buttonBack}
-            onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon
               name={'arrow-back'}
               size={28}
-              style={styles.buttonBackIcon}
               color={'#8D8D8D'}
+              style={styles.buttonBack}
             />
           </TouchableOpacity>
           <Text style={styles.headerText}>Receiver's Name</Text>
         </View>
         <KeyboardAvoidingView
-          style={styles.keyboardAvoidingView}
-          behavior={Platform === 'ios' ? 'padding' : null}
-          enabled>
+          style={styles.keyboardAvoidView}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          // keyboardVerticalOffset={'10%'}
+        >
           <View style={styles.chatBody}>
             <FlatList
               data={chat}
@@ -121,24 +122,27 @@ const Chat = ({navigation}) => {
               contentContainerStyle={styles.chatList}
             />
           </View>
-          <View style={styles.inputBody}>
-            <View style={styles.inputGroup}>
-              <TextInput
-                style={styles.chatInput}
-                placeholder="Write a message..."
-                placeholderTextColor={'grey'}
-                value={message}
-                onChangeText={text => setMessage(text)}
-              />
-            </View>
-            <TouchableOpacity>
-              <Icon
-                name="send"
-                size={30}
-                color={'white'}
-                style={styles.buttonChatIcon}
-              />
-            </TouchableOpacity>
+          <View>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View style={styles.inputGroup}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Write a message..."
+                  placeholderTextColor={'grey'}
+                  value={message}
+                  onChangeText={text => setMessage(text)}
+                  autoCorrect={false}
+                />
+                <TouchableOpacity>
+                  <Icon
+                    name="send"
+                    size={28}
+                    color={'white'}
+                    style={styles.buttonSend}
+                  />
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </KeyboardAvoidingView>
       </View>
@@ -147,134 +151,91 @@ const Chat = ({navigation}) => {
 };
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
-    maxHeight: '100%',
-    maxWidth: '100%',
-    width: '100%',
-    height: '100%',
-    padding: 10,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 10,
     backgroundColor: '#FFFFFF',
-    // borderColor: 'red',
-    // borderWidth: 1,
-    // borderStyle: 'solid',
+    borderColor: 'green',
+    borderWidth: 1,
+    borderStyle: 'solid',
   },
   header: {
-    // flex: 1,
     width: '100%',
+    height: '10%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 5,
-    paddingHorizontal: 4,
+    padding: '2%',
     borderTopColor: '#8D8D8D',
     borderTopWidth: 2,
     borderBottomColor: '#8D8D8D',
     borderBottomWidth: 2,
   },
   buttonBack: {
-    flex: 1,
-    maxWidth: '14%',
-    height: '100%',
-    maxHeight: '90%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
+    padding: '8%',
+    maxWidth: '55%',
     borderRadius: 10,
     borderColor: '#8D8D8D',
     borderWidth: 1,
     borderStyle: 'solid',
   },
-  buttonBackIcon: {
-    // borderColor: 'green',
-    // borderWidth: 1,
-    // borderStyle: 'solid',
-  },
   headerText: {
-    flex: 1,
-    textAlign: 'center',
-    paddingVertical: 10,
+    // flex: 1,
+    justifyContent: 'center',
     fontSize: 28,
     fontWeight: 'bold',
-    // borderColor: 'green',
-    // borderWidth: 1,
-    // borderStyle: 'solid',
+    textAlign: 'center',
   },
-  keyboardAvoidingView: {
+  keyboardAvoidView: {
     flex: 1,
-    // margin: 0,
-    // padding: 0,
-    // borderColor: 'green',
-    // borderWidth: 1,
-    // borderStyle: 'solid',
+    // justifyContent: 'flex-start',
+    // padding: 20,
+    paddingBottom: '15%',
+    // backgroundColor: 'green',
+    borderColor: 'purple',
+    borderWidth: 1,
+    borderStyle: 'solid',
   },
   chatBody: {
-    height: '90%',
+    flex: 1,
     marginBottom: '2%',
+    paddingVertical: '2%',
     borderTopColor: '#8D8D8D',
     borderTopWidth: 4,
     borderBottomColor: '#8D8D8D',
     borderBottomWidth: 4,
-    // borderColor: 'blue',
-    // borderWidth: 1,
-    // borderStyle: 'solid',
   },
   chatList: {
-    width: '100%',
-    minWidth: '100%',
-    maxWidth: '100%',
     padding: 10,
-    // borderTopColor: '#8D8D8D',
-    // borderTopWidth: 4,
-    // borderBottomColor: '#8D8D8D',
-    // borderBottomWidth: 4,
-    // borderColor: 'blue',
-    // borderWidth: 1,
-    // borderStyle: 'solid',
-  },
-  inputBody: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 5,
-    // borderColor: 'green',
-    // borderWidth: 1,
-    // borderStyle: 'solid',
+    // height: '95%',
   },
   inputGroup: {
-    flex: 1,
+    // paddingBottom: '15%',
+    width: '100%',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
+    // marginTop: '1.5%',
+    borderColor: 'red',
+    borderWidth: 1,
+    borderStyle: 'solid',
     alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  textInput: {
+    width: '80%',
+    // maxWidth: '75%',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    color: 'black',
     borderRadius: 20,
     borderColor: '#8D8D8D',
     borderWidth: 2,
     borderStyle: 'solid',
-    marginRight: 5,
   },
-  addIcon: {
-    paddingHorizontal: 15,
-    paddingVertical: 7,
-  },
-  chatInput: {
-    height: 45,
-    width: '80%',
-    maxWidth: '75%',
-    paddingVertical: 5,
-    color: 'black',
-    // borderWidth: 1,
-    // borderColor: 'red',
-    // borderStyle: 'solid',
-  },
-  buttonChat: {
-    // height: 45,
-    marginLeft: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: '#1C94F7',
-  },
-  buttonChatIcon: {
+  buttonSend: {
     padding: 10,
     backgroundColor: '#1C94F7',
     borderRadius: 30,
