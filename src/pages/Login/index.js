@@ -7,6 +7,10 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 const Login = ({navigation}) => {
@@ -15,69 +19,40 @@ const Login = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          width: '70%',
-          height: '30%',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-          borderRadius: 20,
-          borderColor: 'grey',
-          borderWidth: 1,
-          borderStyle: 'solid',
-        }}>
-        <View
-          style={{
-            height: '50%',
-            flex: 1,
-            alignItems: 'center',
-            // borderColor: 'orange',
-            // borderWidth: 1,
-            // borderStyle: 'solid',
-          }}>
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 20,
-              // borderColor: 'purple',
-              // borderWidth: 1,
-              // borderStyle: 'solid',
-            }}>
-            <Text style={{fontSize: 24, fontWeight: '600'}}>USER LOGIN</Text>
-          </View>
-          <View
-            style={{
-              flex: 2,
-              // borderColor: 'red',
-              // borderWidth: 1,
-              // borderStyle: 'solid',
-              marginBottom: 5,
-            }}>
-            <View style={styles.inputContainer}>
-              <Image
-                style={styles.inputIcon}
-                source={{uri: 'https://img.icons8.com/ios-glyphs/512/key.png'}}
-              />
-              <TextInput
-                style={styles.inputs}
-                placeholder="Username"
-                placeholderTextColor={'black'}
-                secureTextEntry={true}
-                underlineColorAndroid="transparent"
-                onChangeText={password => setPassword({password})}
-              />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          style={styles.content}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}>
+          <View style={styles.formContainer}>
+            <View style={styles.formHeader}>
+              <Text style={styles.headerText}>USER LOGIN</Text>
             </View>
-
-            <TouchableOpacity
-              style={[styles.buttonContainer, styles.loginButton]}
-              onPress={() => navigation.navigate('Contact')}>
-              <Text style={styles.loginText}>Login</Text>
-            </TouchableOpacity>
+            <View style={styles.formBody}>
+              <View style={styles.inputContainer}>
+                <Image
+                  style={styles.inputIcon}
+                  source={{
+                    uri: 'https://img.icons8.com/ios-glyphs/512/key.png',
+                  }}
+                />
+                <TextInput
+                  style={styles.inputs}
+                  placeholder="Username"
+                  placeholderTextColor={'black'}
+                  secureTextEntry={true}
+                  underlineColorAndroid="transparent"
+                  onChangeText={password => setPassword({password})}
+                />
+              </View>
+              <TouchableOpacity
+                style={[styles.buttonContainer, styles.loginButton]}
+                onPress={() => navigation.navigate('Contact')}>
+                <Text style={styles.loginText}>Login</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
@@ -89,43 +64,63 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
   },
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    paddingVertical: '2%',
+    paddingHorizontal: '8%',
+  },
+  formContainer: {
+    alignItems: 'center',
+    paddingHorizontal: '4%',
+    paddingVertical: '8%',
+  },
+  formHeader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '2%',
+  },
+  headerText: {fontSize: 24, fontWeight: '600'},
+  formBody: {
+    marginBottom: 5,
+    paddingVertical: '2%',
+    paddingHorizontal: '8%',
+    // borderColor: 'purple',
+    // borderWidth: 1,
+    // borderStyle: 'solid',
+  },
   inputContainer: {
+    marginVertical: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
     borderBottomColor: '#F5FCFF',
     backgroundColor: '#EEE',
     borderRadius: 30,
     borderBottomWidth: 1,
-    marginVertical: 5,
-    width: 220,
-    height: 45,
-    // marginBottom: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   inputs: {
-    height: 45,
-    marginLeft: 16,
-    fontSize: 16,
+    padding: '6%',
+    fontSize: 18,
     borderBottomColor: '#FFFFFF',
     flex: 1,
   },
   inputIcon: {
-    width: 30,
-    height: 30,
+    paddingVertical: '6%',
+    paddingHorizontal: '5%',
     marginLeft: 15,
     justifyContent: 'center',
     backgroundColor: '#EEE',
   },
   buttonContainer: {
-    height: 45,
+    paddingVertical: '5%',
+    paddingHorizontal: '40%',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 5,
-    width: 220,
     borderRadius: 30,
-    // borderColor: 'purple',
-    // borderWidth: 1,
-    // borderStyle: 'solid',
   },
   loginButton: {
     backgroundColor: '#1c94f7',

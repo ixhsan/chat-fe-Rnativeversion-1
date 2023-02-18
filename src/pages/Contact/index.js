@@ -107,11 +107,13 @@ const Contact = ({navigation}) => {
             contentContainerStyle={styles.contactList}
           />
         </View>
-        <TouchableOpacity
-          style={styles.buttonLogOut}
-          onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonLogOutText}>LOG OUT</Text>
-        </TouchableOpacity>
+        <View style={styles.footer}>
+          <TouchableOpacity
+            style={styles.buttonLogOut}
+            onPress={() => navigation.goBack()}>
+            <Text style={styles.buttonLogOutText}>LOG OUT</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -151,7 +153,7 @@ const styles = StyleSheet.create({
   inputGroup: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'left',
     alignItems: 'center',
     borderRadius: 20,
     borderColor: '#8D8D8D',
@@ -164,14 +166,8 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   textInput: {
-    height: 30,
-    width: '80%',
     maxWidth: '75%',
-    paddingVertical: 5,
     color: 'black',
-    // borderWidth: 1,
-    // borderColor: 'red',
-    // borderStyle: 'solid',
   },
   buttonAdd: {
     marginLeft: 5,
@@ -184,10 +180,13 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
   },
+  footer: {
+    padding: '1%',
+  },
   buttonLogOut: {
-    width: '40%',
     alignSelf: 'center',
-    paddingVertical: 10,
+    paddingVertical: '3%',
+    paddingHorizontal: '8%',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: 'red',
@@ -201,7 +200,7 @@ const styles = StyleSheet.create({
   },
   contactBody: {
     // flexDirection: 'column',
-    height: '78%',
+    // flex: 1,
     marginVertical: '2.75%',
     borderTopColor: '#8D8D8D',
     borderTopWidth: 4,
@@ -212,7 +211,7 @@ const styles = StyleSheet.create({
     // borderStyle: 'solid',
   },
   contactList: {
-    flexGrow: 1,
+    height: '75%',
     marginVertical: '2%',
   },
 });
