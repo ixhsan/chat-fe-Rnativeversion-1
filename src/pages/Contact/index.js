@@ -124,11 +124,9 @@ const styles = StyleSheet.create({
     maxHeight: '100%',
     maxWidth: '100%',
     width: '100%',
-    padding: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     backgroundColor: '#FFFFFF',
-    // borderColor: 'purple',
-    // borderWidth: 1,
-    // borderStyle: 'solid',
   },
   header: {
     flexDirection: 'row',
@@ -136,9 +134,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 'auto',
     paddingVertical: 10,
-    // borderColor: 'purple',
-    // borderWidth: 1,
-    // borderStyle: 'solid',
   },
   textHeader: {fontSize: 36, fontWeight: 'bold'},
   textHeaderSecondary: {fontSize: 18},
@@ -180,8 +175,19 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
   },
+  contactBody: {
+    height: '75%',
+    marginVertical: '2.75%',
+    borderTopColor: '#8D8D8D',
+    borderTopWidth: 4,
+    borderBottomColor: '#8D8D8D',
+    borderBottomWidth: 4,
+  },
+  contactList: {
+    marginVertical: '2%',
+  },
   footer: {
-    padding: '1%',
+    padding: '2%',
   },
   buttonLogOut: {
     alignSelf: 'center',
@@ -197,22 +203,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'red',
-  },
-  contactBody: {
-    // flexDirection: 'column',
-    // flex: 1,
-    marginVertical: '2.75%',
-    borderTopColor: '#8D8D8D',
-    borderTopWidth: 4,
-    borderBottomColor: '#8D8D8D',
-    borderBottomWidth: 4,
-    // borderWidth: 1,
-    // borderColor: 'green',
-    // borderStyle: 'solid',
-  },
-  contactList: {
-    height: '75%',
-    marginVertical: '2%',
   },
 });
 

@@ -144,6 +144,7 @@ const Chat = ({navigation}) => {
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 0,
     backgroundColor: '#FFFFFF',
     // borderColor: 'green',
     // borderWidth: 1,
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   chatBody: {
-    flexShrink: 1,
+    flex: 1,
     paddingVertical: '2%',
     borderTopColor: '#8D8D8D',
     borderTopWidth: 4,
