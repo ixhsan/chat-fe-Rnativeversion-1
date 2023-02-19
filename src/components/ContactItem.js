@@ -2,7 +2,7 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {Icon} from 'react-native-elements';
 
-const ContactItem = ({navigation, name}) => {
+const ContactItem = ({navigation, name, id}) => {
   return (
     <TouchableOpacity
       style={styles.contactItem}

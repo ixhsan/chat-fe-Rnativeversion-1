@@ -11,12 +11,14 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {Icon} from 'react-native-elements';
 import ChatItem from '../../components/ChatItem';
+import CustomModal from '../../components/CustomModal';
 
 const Chat = ({navigation}) => {
   const [message, setMessage] = useState('');
+  const [showRemove, setRemove] = useState(false);
   const [chat, setChat] = useState([
     {
       id: 1,
@@ -89,59 +91,78 @@ const Chat = ({navigation}) => {
     },
   ]);
 
+  const handleDeleteNO = () => {
+    setRemove(false);
+  };
+
+  const handleDeleteYES = () => {
+    // Perform the delete action
+    setRemove(false);
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.content}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        // keyboardVerticalOffset={'10%'}
-      >
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon
-              name={'arrow-back'}
-              size={28}
-              color={'#8D8D8D'}
-              style={styles.buttonBack}
-            />
-          </TouchableOpacity>
-          <Text style={styles.headerText}>Receiver's Name</Text>
-        </View>
-        <View style={styles.chatBody}>
-          <FlatList
-            data={chat}
-            renderItem={({item, index}) => (
-              <ChatItem
-                id={item.id}
-                message={item.message}
-                sentID={item.sentID}
-              />
-            )}
-            keyExtractor={item => item.id}
-            contentContainerStyle={styles.chatList}
-          />
-        </View>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.inputGroup}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Write a message..."
-              placeholderTextColor={'grey'}
-              value={message}
-              onChangeText={text => setMessage(text)}
-            />
-            <TouchableOpacity>
+    <>
+      <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView
+          style={styles.content}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          // keyboardVerticalOffset={'10%'}
+        >
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <Icon
-                name="send"
-                size={24}
-                color={'white'}
-                style={styles.buttonSend}
+                name={'arrow-back'}
+                size={28}
+                color={'#8D8D8D'}
+                style={styles.buttonBack}
               />
             </TouchableOpacity>
+            <Text style={styles.headerText}>Receiver's Name</Text>
           </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          <View style={styles.chatBody}>
+            <FlatList
+              data={chat}
+              renderItem={({item, index}) => (
+                <ChatItem
+                  id={item.id}
+                  message={item.message}
+                  sentID={item.sentID}
+                  setRemove={() => setRemove(prevState => !prevState)}
+                />
+              )}
+              keyExtractor={item => item.id}
+              contentContainerStyle={styles.chatList}
+            />
+          </View>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.inputGroup}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Write a message..."
+                placeholderTextColor={'grey'}
+                value={message}
+                onChangeText={text => setMessage(text)}
+              />
+              <TouchableOpacity>
+                <Icon
+                  name="send"
+                  size={24}
+                  color={'white'}
+                  style={styles.buttonSend}
+                />
+              </TouchableOpacity>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+        <CustomModal
+          visible={showRemove}
+          onConfirm={handleDeleteYES}
+          onClose={handleDeleteNO}
+          title="Delete Message"
+          message="Are you sure you want to delete this message?"
+        />
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -222,6 +243,48 @@ const styles = StyleSheet.create({
   },
   buttonAddText: {
     color: '#FFFFFF',
+    textAlign: 'center',
+  },
+});
+
+const modalStyles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+    display: 'none',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
     textAlign: 'center',
   },
 });

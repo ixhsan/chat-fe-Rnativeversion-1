@@ -13,7 +13,7 @@ import Router from './router';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import {useCallback} from 'react';
+import React, {useCallback} from 'react';
 
 const Section = ({children, title}) => {
   const isDarkMode = useColorScheme() === 'dark';

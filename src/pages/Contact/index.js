@@ -11,8 +11,10 @@ import {
 import React, {useState} from 'react';
 import {Icon} from 'react-native-elements';
 import ContactItem from '../../components/ContactItem';
+import CustomModal from '../../components/CustomModal';
 
 const Contact = ({navigation}) => {
+  const [showLogOut, setShowLogout] = useState(false);
   const [contactID, setContactID] = useState('');
   const [contacts, setContacts] = useState([
     {
@@ -65,6 +67,16 @@ const Contact = ({navigation}) => {
     },
   ]);
 
+  const handleLogOutNO = () => {
+    setShowLogout(false);
+  };
+
+  const handleLogOutYES = () => {
+    // Perform the logout action
+    navigation.navigate('Login');
+    setShowLogout(false);
+  };
+
   return (
     <SafeAreaView
       style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -110,11 +122,18 @@ const Contact = ({navigation}) => {
         <View style={styles.footer}>
           <TouchableOpacity
             style={styles.buttonLogOut}
-            onPress={() => navigation.goBack()}>
+            onPress={() => setShowLogout(true)}>
             <Text style={styles.buttonLogOutText}>LOG OUT</Text>
           </TouchableOpacity>
         </View>
       </View>
+      <CustomModal
+        visible={showLogOut}
+        onConfirm={handleLogOutYES}
+        onClose={handleLogOutNO}
+        title="Log Out"
+        message="End this session?"
+      />
     </SafeAreaView>
   );
 };

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   StyleSheet,
@@ -14,8 +14,7 @@ import {
 } from 'react-native';
 
 const Login = ({navigation}) => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [username, setUsername] = useState();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,7 +40,7 @@ const Login = ({navigation}) => {
                   placeholderTextColor={'black'}
                   secureTextEntry={true}
                   underlineColorAndroid="transparent"
-                  onChangeText={password => setPassword({password})}
+                  onChangeText={username => setUsername({username})}
                 />
               </View>
               <TouchableOpacity
