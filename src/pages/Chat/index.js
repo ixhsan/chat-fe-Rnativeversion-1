@@ -10,94 +10,88 @@ import {
   FlatList,
   TouchableWithoutFeedback,
   Keyboard,
+  Animated,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {Icon} from 'react-native-elements';
 import ChatItem from '../../components/ChatItem';
 import CustomModal from '../../components/CustomModal';
+import {useDispatch, useSelector} from 'react-redux';
+import {deleteMessage, sendMessage} from '../../actions/action';
 
 const Chat = ({navigation}) => {
-  const [message, setMessage] = useState('');
-  const [showRemove, setRemove] = useState(false);
-  const [chat, setChat] = useState([
-    {
-      id: 1,
-      message: 'Tes 1 2 3',
-      sentID: 'fajar',
-    },
-    {
-      id: 2,
-      message:
-        'the quick brown fox jumps over the lazy dog, the quick brown fox jumps over the lazy dog, the quick brown fox jumps over the lazy dog,',
-      sentID: 'fajar',
-    },
-    {
-      id: 3,
-      message:
-        'the quick brown fox jumps over the lazy dog, the quick brown fox jumps over the lazy dog, the quick brown fox jumps over the lazy dog,',
-      sentID: 'ikhsan',
-    },
-    {
-      id: 4,
-      message: 'Bismillah',
-      sentID: 'ikhsan',
-    },
-    {
-      id: 5,
-      message: 'haha',
-      sentID: 'fajar',
-    },
-    {
-      id: 6,
-      message: 'masuk masuk',
-      sentID: 'ikhsan',
-    },
-    {
-      id: 7,
-      message: 'okey masuk',
-      sentID: 'ikhsan',
-    },
-    {
-      id: 8,
-      message: 'berhasil',
-      sentID: 'fajar',
-    },
-    {
-      id: 9,
-      message:
-        'the quick brown fox jumps over the lazy dog, the quick brown fox jumps over the lazy dog, the quick brown fox jumps over the lazy dog,',
-      sentID: 'ikhsan',
-    },
-    {
-      id: 10,
-      message: 'bismillah',
-      sentID: 'fajar',
-    },
-    {
-      id: 11,
-      message: 'okey masuk',
-      sentID: 'ikhsan',
-    },
-    {
-      id: 12,
-      message: 'berhasil',
-      sentID: 'fajar',
-    },
-    {
-      id: 13,
-      message:
-        'the quick brown fox jumps over the lazy dog, the quick brown fox jumps over the lazy dog, the quick brown fox jumps over the lazy dog,',
-      sentID: 'ikhsan',
-    },
-  ]);
+  const dispatch = useDispatch();
+  const db = useSelector(state => state.db);
+  const flatListRef = useRef(null);
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const [inputText, setInputText] = useState('');
 
-  const handleDeleteNO = () => {
-    setRemove(false);
+  const [showRemoveModal, setRemoveModal] = useState(false);
+  const [removeMessageID, setRemoveMessageID] = useState({
+    _id: '',
+    message: '',
+    receiverID: '',
+    chatID: '',
+    sentStatus: '',
+  });
+
+  const handleGoBack = () => {
+    navigation.goBack();
   };
 
-  const handleDeleteYES = () => {
-    // Perform the delete action
-    setRemove(false);
+  const handleSendMessage = () => {
+    dispatch(
+      sendMessage({
+        message: inputText,
+      }),
+    );
+    setInputText('');
+    Keyboard.dismiss();
+    Animated.timing(scrollY, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleScrollToBottom = () => {
+    Animated.timing(scrollY, {
+      toValue: flatListRef.current?.scrollToEnd({animated: true}),
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleDeleteYES = useCallback(() => {
+    const payload = {
+      _id: removeMessageID._id,
+      receiverID: removeMessageID.receiverID,
+      chatID: removeMessageID.chatID,
+    };
+    dispatch(deleteMessage(payload, removeMessageID.sentStatus));
+    setTimeout(() => {
+      setRemoveMessageID({
+        _id: '',
+        message: '',
+        receiverID: '',
+        chatID: '',
+        sentStatus: '',
+      });
+    }, 500);
+    setRemoveModal(false);
+  }, [removeMessageID, dispatch]);
+
+  const handleDeleteNO = () => {
+    setTimeout(() =>
+      setRemoveMessageID({
+        _id: '',
+        message: '',
+        receiverID: '',
+        chatID: '',
+        sentStatus: '',
+      }),
+    );
+    setRemoveModal(false);
   };
 
   return (
@@ -105,11 +99,9 @@ const Chat = ({navigation}) => {
       <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView
           style={styles.content}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          // keyboardVerticalOffset={'10%'}
-        >
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={handleGoBack}>
               <Icon
                 name={'arrow-back'}
                 size={28}
@@ -117,22 +109,42 @@ const Chat = ({navigation}) => {
                 style={styles.buttonBack}
               />
             </TouchableOpacity>
-            <Text style={styles.headerText}>Receiver's Name</Text>
+            <Text style={styles.headerText}>
+              {db.selectedContact?.username
+                ? db.selectedContact?.username
+                : "Receiver's Name"}
+            </Text>
           </View>
           <View style={styles.chatBody}>
-            <FlatList
-              data={chat}
-              renderItem={({item, index}) => (
-                <ChatItem
-                  id={item.id}
-                  message={item.message}
-                  sentID={item.sentID}
-                  setRemove={() => setRemove(prevState => !prevState)}
-                />
-              )}
-              keyExtractor={item => item.id}
-              contentContainerStyle={styles.chatList}
-            />
+            {db.selectedContact._id && (
+              <Animated.FlatList
+                ref={flatListRef}
+                data={db.selectedChat.conversation}
+                renderItem={({item, index}) => (
+                  <ChatItem
+                    _id={item._id}
+                    message={item.message}
+                    sentID={item.sentID}
+                    receiverID={item.receiverID}
+                    sentStatus={item.sentStatus}
+                    readStatus={item.readStatus}
+                    deleteStatus={item.deleteStatus}
+                    sentTime={item.createdAt}
+                    setRemoveModal={() =>
+                      setRemoveModal(prevState => !prevState)
+                    }
+                    setRemoveMessageID={setRemoveMessageID}
+                  />
+                )}
+                keyExtractor={item => item._id}
+                contentContainerStyle={styles.chatList}
+                onContentSizeChange={handleScrollToBottom}
+                onScroll={Animated.event(
+                  [{nativeEvent: {contentOffset: {y: scrollY}}}],
+                  {useNativeDriver: true},
+                )}
+              />
+            )}
           </View>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.inputGroup}>
@@ -140,10 +152,10 @@ const Chat = ({navigation}) => {
                 style={styles.textInput}
                 placeholder="Write a message..."
                 placeholderTextColor={'grey'}
-                value={message}
-                onChangeText={text => setMessage(text)}
+                value={inputText}
+                onChangeText={text => setInputText(text)}
               />
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleSendMessage}>
                 <Icon
                   name="send"
                   size={24}
@@ -155,7 +167,7 @@ const Chat = ({navigation}) => {
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
         <CustomModal
-          visible={showRemove}
+          visible={showRemoveModal}
           onConfirm={handleDeleteYES}
           onClose={handleDeleteNO}
           title="Delete Message"

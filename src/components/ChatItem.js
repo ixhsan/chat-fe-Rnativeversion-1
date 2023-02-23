@@ -1,23 +1,45 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Icon} from 'react-native-elements';
+import {useSelector} from 'react-redux';
 
-const ChatItem = ({id, message, sentID, setRemove}) => {
+const ChatItem = props => {
   const [showDrawer, setShowDrawer] = useState(false);
-  const messagePosition = sentID === 'ikhsan' ? styles.senderContainer : '';
+  const user = useSelector(state => state.user);
+  const db = useSelector(state => state.db);
+  const messagePosition =
+    props.sentID === user._id ? styles.senderContainer : '';
   const messageOverlay =
-    sentID === 'ikhsan' ? styles.senderOverlay : styles.receiverOverlay;
-  const textColor = sentID === 'ikhsan' ? 'white' : 'black';
+    props.sentID === user._id ? styles.senderOverlay : styles.receiverOverlay;
+  const textColor = props.sentID === user._id ? 'white' : 'black';
+
+  const handleSetRemoveMessageID = useCallback(() => {
+    props.setRemoveMessageID(prevState => {
+      return {
+        _id: props._id,
+        message: props.message,
+        receiverID: db.selectedContact.username,
+        chatID: db.selectedChat._id,
+        sentStatus: props.sentStatus,
+      };
+    });
+  }, [
+    props._id,
+    props.sentStatus,
+    db.selectedContact.username,
+    db.selectedChat._id,
+  ]);
 
   const handleRemoveMessage = () => {
-    setRemove();
+    handleSetRemoveMessageID();
+    props.setRemoveModal();
   };
 
   return (
     <>
       <View style={[styles.container, messagePosition]}>
         <View style={styles.drawerIcon}>
-          {sentID === 'ikhsan' && showDrawer && (
+          {props.sentID === user._id && showDrawer && (
             <TouchableOpacity>
               <Icon
                 name="delete"
@@ -31,7 +53,9 @@ const ChatItem = ({id, message, sentID, setRemove}) => {
         <TouchableOpacity
           style={[messageOverlay, styles.chatItem]}
           onLongPress={handleRemoveMessage}>
-          <Text style={[styles.chatText, {color: textColor}]}>{message}</Text>
+          <Text style={[styles.chatText, {color: textColor}]}>
+            {props.message}
+          </Text>
         </TouchableOpacity>
       </View>
     </>

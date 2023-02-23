@@ -8,72 +8,88 @@ import {
   KeyboardAvoidingView,
   FlatList,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Icon} from 'react-native-elements';
 import ContactItem from '../../components/ContactItem';
 import CustomModal from '../../components/CustomModal';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  addContact,
+  deleteMessageNotice,
+  loadUserData,
+  receiveMessage,
+  selectContact,
+  updateReadNotice,
+} from '../../actions/action';
+import {
+  closeSocket,
+  connectSocket,
+  offSocket,
+  signOut,
+} from '../../actions/action.auth';
 
 const Contact = ({navigation}) => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
+  const {socket} = useSelector(state => state.user);
+  const db = useSelector(state => state.db);
+
   const [showLogOut, setShowLogout] = useState(false);
-  const [contactID, setContactID] = useState('');
-  const [contacts, setContacts] = useState([
-    {
-      id: 1,
-      name: 'fajar',
-    },
-    {
-      id: 2,
-      name: 'tantowi',
-    },
-    {
-      id: 3,
-      name: 'yaqin',
-    },
-    {
-      id: 4,
-      name: 'rahmat',
-    },
-    {
-      id: 5,
-      name: 'abang',
-    },
-    {
-      id: 6,
-      name: 'ikhsan',
-    },
-    {
-      id: 7,
-      name: 'yudi',
-    },
-    {
-      id: 8,
-      name: 'gemma',
-    },
-    {
-      id: 9,
-      name: 'rifqi',
-    },
-    {
-      id: 10,
-      name: 'yudi',
-    },
-    {
-      id: 11,
-      name: 'gemma',
-    },
-    {
-      id: 12,
-      name: 'rifqi',
-    },
-  ]);
+  const [newContact, setNewContact] = useState('');
+  // const [contacts, setContacts] = useState([]);
+  const [contactActive, setContactActive] = useState(null);
+
+  useEffect(() => {
+    dispatch(loadUserData());
+    dispatch(connectSocket());
+    return () => {
+      dispatch(closeSocket('connect'));
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('state db', db);
+  }, [user]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('receive-chat', payload => {
+        dispatch(receiveMessage(payload));
+      });
+      socket.on('receive-delete-notice', payload => {
+        console.log('payload dari send-delete-notice', payload);
+        dispatch(deleteMessageNotice(payload));
+      });
+      socket.on('receive-read-notice', ({payload}) => {
+        console.log('payload dari receive-read-notice', payload);
+        dispatch(updateReadNotice(payload));
+      });
+      return () => {
+        dispatch(offSocket('receive-chat'));
+        dispatch(offSocket('receive-delete-notice'));
+        dispatch(offSocket('receive-read-notice'));
+      };
+    }
+  }, [socket, dispatch]);
+
+  const handleAddContact = async () => {
+    console.log('state db', db)
+    if (newContact === '' || newContact === user.username) return;
+    dispatch(addContact(newContact.toLowerCase()));
+    setNewContact('');
+  };
+
+  const handleSelectContact = (contact, chatID) => {
+    setContactActive(contact.username);
+    dispatch(selectContact(contact, chatID));
+  };
 
   const handleLogOutNO = () => {
     setShowLogout(false);
   };
 
   const handleLogOutYES = () => {
-    // Perform the logout action
-    navigation.navigate('Login');
+    dispatch(signOut());
     setShowLogout(false);
   };
 
@@ -97,25 +113,39 @@ const Contact = ({navigation}) => {
               style={styles.textInput}
               placeholder="Insert username..."
               placeholderTextColor={'grey'}
-              value={contactID}
-              onChangeText={text => setContactID(text)}
+              value={newContact}
+              onChangeText={text => setNewContact(text)}
             />
           </KeyboardAvoidingView>
-          <TouchableOpacity style={styles.buttonAdd}>
+          <TouchableOpacity style={styles.buttonAdd} onPress={handleAddContact}>
             <Text style={styles.buttonAddText}>Add</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.contactBody}>
           <FlatList
-            data={contacts}
+            data={db.contacts}
             renderItem={({item, index}) => (
               <ContactItem
-                no={item.id}
-                name={item.name}
+                _id={item._id}
+                chatID={item.chatID}
+                name={item.username}
+                unread={item.unreadCount}
                 navigation={navigation}
+                contactActive={contactActive}
+                setActive={() =>
+                  handleSelectContact(
+                    {
+                      _id: item._id,
+                      username: item.username,
+                      name: item.name,
+                      unreadCount: item.unreadCount,
+                    },
+                    item.chatID,
+                  )
+                }
               />
             )}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item._id}
             contentContainerStyle={styles.contactList}
           />
         </View>

@@ -2,11 +2,21 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {Icon} from 'react-native-elements';
 
-const ContactItem = ({navigation, name, id}) => {
+const ContactItem = ({
+  navigation,
+  name,
+  _id,
+  setActive,
+  contactActive,
+  unread,
+}) => {
+  const handleSelectItem = () => {
+    setActive();
+    navigation.navigate('Chat');
+  };
+
   return (
-    <TouchableOpacity
-      style={styles.contactItem}
-      onPress={() => navigation.navigate('Chat')}>
+    <TouchableOpacity style={styles.contactItem} onPress={handleSelectItem}>
       <Icon
         name="person"
         size={32}

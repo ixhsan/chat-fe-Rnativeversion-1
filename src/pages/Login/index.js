@@ -12,9 +12,24 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {signIn} from '../../actions/action.auth';
 
 const Login = ({navigation}) => {
+  const dispatch = useDispatch();
+  const state = useSelector(state => state);
   const [username, setUsername] = useState();
+
+  const test = () => {
+    console.log('db', state.db);
+    console.log('user', state.user);
+  };
+
+  const handleSubmit = () => {
+    if (username === '') return;
+    dispatch(signIn(username));
+    setUsername('');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,16 +55,21 @@ const Login = ({navigation}) => {
                   placeholderTextColor={'black'}
                   secureTextEntry={true}
                   underlineColorAndroid="transparent"
-                  onChangeText={username => setUsername({username})}
+                  onChangeText={text => setUsername(text)}
                 />
               </View>
               <TouchableOpacity
                 style={[styles.buttonContainer, styles.loginButton]}
-                onPress={() => navigation.navigate('Contact')}>
+                onPress={handleSubmit}>
                 <Text style={styles.loginText}>Login</Text>
               </TouchableOpacity>
             </View>
           </View>
+          <TouchableOpacity
+            style={[styles.buttonContainer, styles.loginButton]}
+            onPress={test}>
+            <Text style={styles.loginText}>test button</Text>
+          </TouchableOpacity>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </SafeAreaView>

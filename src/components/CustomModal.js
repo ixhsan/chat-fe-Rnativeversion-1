@@ -1,13 +1,13 @@
 import React from 'react';
 import {Modal, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 
-const CustomModal = ({visible, onClose, title, message, onConfirm}) => {
+const CustomModal = ({visible, onClose, title, message, onConfirm, value}) => {
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.container}>
         <View style={styles.modal}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.message}>{message}</Text>
+          <Text style={styles.message}>{`${message}\n${value}`}</Text>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
               <Text style={styles.buttonText}>Cancel</Text>
