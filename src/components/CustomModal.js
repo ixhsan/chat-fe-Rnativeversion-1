@@ -6,8 +6,21 @@ const CustomModal = ({visible, onClose, title, message, onConfirm, value}) => {
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.container}>
         <View style={styles.modal}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.message}>{`${message}\n${value}`}</Text>
+          <View style={styles.contentContainer}>
+            <Text style={styles.textTitle}>{title}</Text>
+            <Text style={styles.textMessage}>{message}</Text>
+            {value && (
+              <View style={styles.valueContainer}>
+                <Text
+                  style={[
+                    styles.textMessage,
+                    {color: 'white', marginBottom: 0},
+                  ]}>
+                  {value}
+                </Text>
+              </View>
+            )}
+          </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
               <Text style={styles.buttonText}>Cancel</Text>
@@ -38,14 +51,22 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
   },
-  title: {
+  contentContainer: {
+    marginBottom: '5%',
+  },
+  textTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: '4%',
   },
-  message: {
+  textMessage: {
     fontSize: 16,
-    marginBottom: 20,
+    marginBottom: '4%',
+  },
+  valueContainer: {
+    backgroundColor: '#2196F3',
+    padding: '5%',
+    borderRadius: '10%',
   },
   buttonContainer: {
     flexDirection: 'row',

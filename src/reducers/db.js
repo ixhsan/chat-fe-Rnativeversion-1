@@ -16,6 +16,7 @@ import {
   UPDATE_READ_NOTICE,
   UPDATE_READ_STATUS,
   CLEAN_UP_SESSION,
+  UNSELECT_DATA,
 } from '../actions/types';
 
 const initialState = {
@@ -90,6 +91,20 @@ export default function dbReducer(state = initialState, action) {
           _id: payload.chat._id,
           contactName: payload.chat.contactName,
           conversation: payload.chat.conversation,
+        },
+      };
+    case UNSELECT_DATA:
+      return {
+        ...state,
+        selectedContact: {
+          _id: null,
+          username: null,
+          name: null,
+          unreadCount: 0,
+        },
+        selectedChat: {
+          contactName: null,
+          conversation: [],
         },
       };
     case SEND_NEW_MESSAGE_FE:

@@ -17,7 +17,11 @@ import {Icon} from 'react-native-elements';
 import ChatItem from '../../components/ChatItem';
 import CustomModal from '../../components/CustomModal';
 import {useDispatch, useSelector} from 'react-redux';
-import {deleteMessage, sendMessage} from '../../actions/action';
+import {
+  deleteMessage,
+  sendMessage,
+  unselectContact,
+} from '../../actions/action';
 
 const Chat = ({navigation}) => {
   const dispatch = useDispatch();
@@ -36,6 +40,7 @@ const Chat = ({navigation}) => {
   });
 
   const handleGoBack = () => {
+    dispatch(unselectContact());
     navigation.goBack();
   };
 
@@ -172,6 +177,7 @@ const Chat = ({navigation}) => {
           onClose={handleDeleteNO}
           title="Delete Message"
           message="Are you sure you want to delete this message?"
+          value={removeMessageID.message}
         />
       </SafeAreaView>
     </>

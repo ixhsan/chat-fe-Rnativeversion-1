@@ -22,6 +22,7 @@ import {
   SEND_NEW_MESSAGE_BE_SUCCESS,
   SEND_NEW_MESSAGE_FE,
   UPDATE_READ_STATUS,
+  UNSELECT_DATA,
 } from './types';
 
 export const loadUserData = () => async (dispatch, getState) => {
@@ -134,6 +135,16 @@ export const selectContact =
       console.log('error saat select contact', error);
     }
   };
+
+export const unselectContact = payload => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: UNSELECT_DATA,
+    });
+  } catch (error) {
+    console.log('error saat kembali', error);
+  }
+};
 
 export const sendMessage = payload => async (dispatch, getState) => {
   const state = getState();
