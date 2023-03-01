@@ -11,7 +11,7 @@ async function authInterceptor(config) {
 }
 
 const api = axios.create({
-  baseURL: 'http://192.168.8.108:3036',
+  baseURL: 'http://192.168.1.6:3036',
   timeout: 3000,
 });
 

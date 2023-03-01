@@ -11,7 +11,9 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import {signIn} from '../../actions/action.auth';
 
@@ -19,6 +21,7 @@ const Login = ({navigation}) => {
   const dispatch = useDispatch();
   const state = useSelector(state => state);
   const [username, setUsername] = useState();
+  const insets = useSafeAreaInsets();
 
   const test = () => {
     console.log('db', state.db);
@@ -32,7 +35,16 @@ const Login = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
+      ]}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView
           style={styles.content}
@@ -65,11 +77,11 @@ const Login = ({navigation}) => {
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.buttonContainer, styles.loginButton]}
             onPress={test}>
             <Text style={styles.loginText}>test button</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </SafeAreaView>

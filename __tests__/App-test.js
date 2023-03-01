@@ -14,5 +14,4 @@ describe('Test render', () => {
     renderer.create('App');
   });
 
-  it.todo('user data is inputted');
 });

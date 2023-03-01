@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 // Error to resolve -> JSON value '' of type NSString cannot be converted to a YGValue, did you forget the % or pt suffix
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import Router from './router';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -23,14 +23,9 @@ const store = createStore(rootReducers, applyMiddleware(thunk));
 const App = () => {
   const [fontsLoaded] = useFonts({
     'Material Icons': require('../ios/Fonts/MaterialIcons.ttf'),
+    MaterialIcons: require('../android/app/src/main/assets/fonts/MaterialIcons.ttf'),
     'Font Awesome5': require('../ios/Fonts/FontAwesome5_Regular.ttf'),
   });
-
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (fontsLoaded) {
-  //     await SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded]);
 
   if (!fontsLoaded) {
     return null;

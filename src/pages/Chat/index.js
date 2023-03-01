@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Animated,
+  Dimensions,
 } from 'react-native';
 import React, {useCallback, useRef, useState} from 'react';
 import {Icon} from 'react-native-elements';
@@ -22,6 +23,12 @@ import {
   sendMessage,
   unselectContact,
 } from '../../actions/action';
+import CustomIcons from '../../components/CustomIcon';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const windowScale = Dimensions.get('window').scale;
 
 const Chat = ({navigation}) => {
   const dispatch = useDispatch();
@@ -29,6 +36,7 @@ const Chat = ({navigation}) => {
   const flatListRef = useRef(null);
   const scrollY = useRef(new Animated.Value(0)).current;
   const [inputText, setInputText] = useState('');
+  const insets = useSafeAreaInsets();
 
   const [showRemoveModal, setRemoveModal] = useState(false);
   const [removeMessageID, setRemoveMessageID] = useState({
@@ -101,13 +109,22 @@ const Chat = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+            paddingLeft: insets.left,
+            paddingRight: insets.right,
+          },
+        ]}>
         <KeyboardAvoidingView
           style={styles.content}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <View style={styles.header}>
             <TouchableOpacity onPress={handleGoBack}>
-              <Icon
+              <CustomIcons
                 name={'arrow-back'}
                 size={28}
                 color={'#8D8D8D'}
@@ -161,7 +178,7 @@ const Chat = ({navigation}) => {
                 onChangeText={text => setInputText(text)}
               />
               <TouchableOpacity onPress={handleSendMessage}>
-                <Icon
+                <CustomIcons
                   name="send"
                   size={24}
                   color={'white'}
@@ -179,7 +196,7 @@ const Chat = ({navigation}) => {
           message="Are you sure you want to delete this message?"
           value={removeMessageID.message}
         />
-      </SafeAreaView>
+      </View>
     </>
   );
 };
@@ -198,12 +215,12 @@ const styles = StyleSheet.create({
     // borderStyle: 'solid',
   },
   header: {
-    width: '100%',
-    height: '10%',
-    minHeight: '10%',
+    width: windowWidth,
+    height: windowHeight * 0.1,
+    minHeight: windowHeight * 0.1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: '2%',
+    padding: windowScale * 1,
     borderTopColor: '#8D8D8D',
     borderTopWidth: 2,
     borderBottomColor: '#8D8D8D',
@@ -225,7 +242,7 @@ const styles = StyleSheet.create({
   },
   chatBody: {
     flex: 1,
-    paddingVertical: '2%',
+    paddingVertical: windowHeight * 0.02,
     borderTopColor: '#8D8D8D',
     borderTopWidth: 4,
     borderBottomColor: '#8D8D8D',
@@ -261,48 +278,6 @@ const styles = StyleSheet.create({
   },
   buttonAddText: {
     color: '#FFFFFF',
-    textAlign: 'center',
-  },
-});
-
-const modalStyles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-    display: 'none',
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
     textAlign: 'center',
   },
 });

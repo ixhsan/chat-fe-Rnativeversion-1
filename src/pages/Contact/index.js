@@ -3,13 +3,15 @@ import {
   Text,
   TouchableOpacity,
   View,
-  SafeAreaView,
   TextInput,
   KeyboardAvoidingView,
   FlatList,
+  Dimensions,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Icon} from 'react-native-elements';
+// import {Icon} from 'react-native-elements';
 import ContactItem from '../../components/ContactItem';
 import CustomModal from '../../components/CustomModal';
 import {useDispatch, useSelector} from 'react-redux';
@@ -27,12 +29,21 @@ import {
   offSocket,
   signOut,
 } from '../../actions/action.auth';
+import CustomIcons from '../../components/CustomIcon';
+import {useSafeAreaInsets, SafeAreaView} from 'react-native-safe-area-context';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const screenHeight = Dimensions.get('screen').height;
+const navbarHeight = screenHeight - windowHeight + StatusBar.currentHeight;
+console.log('🚀 ~ file: index.js:39 ~ navbarHeight', navbarHeight);
 
 const Contact = ({navigation}) => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.user);
   const {socket} = useSelector(state => state.user);
   const db = useSelector(state => state.db);
+  const insets = useSafeAreaInsets();
 
   const [showLogOut, setShowLogout] = useState(false);
   const [newContact, setNewContact] = useState('');
@@ -73,7 +84,7 @@ const Contact = ({navigation}) => {
   }, [socket, dispatch]);
 
   const handleAddContact = async () => {
-    console.log('state db', db)
+    console.log('state db', db);
     if (newContact === '' || newContact === user.username) return;
     dispatch(addContact(newContact.toLowerCase()));
     setNewContact('');
@@ -95,15 +106,26 @@ const Contact = ({navigation}) => {
 
   return (
     <SafeAreaView
-      style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        maxHeight: windowHeight - 40,
+        // paddingTop: insets.top,
+        // paddingBottom: insets.bottom,
+        // paddingLeft: insets.left,
+        // paddingRight: insets.right,
+      }}>
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.textHeader}>Chats</Text>
-          <Text style={styles.textHeaderSecondary}>Welcome, Ikhsan</Text>
+          <Text style={styles.textHeaderSecondary}>
+            Welcome {user.username}
+          </Text>
         </View>
         <View style={styles.inputBody}>
           <KeyboardAvoidingView style={styles.inputGroup}>
-            <Icon
+            <CustomIcons
               name="person-add-alt"
               size={20}
               color={'grey'}
@@ -156,23 +178,21 @@ const Contact = ({navigation}) => {
             <Text style={styles.buttonLogOutText}>LOG OUT</Text>
           </TouchableOpacity>
         </View>
+        <CustomModal
+          visible={showLogOut}
+          onConfirm={handleLogOutYES}
+          onClose={handleLogOutNO}
+          title="Log Out"
+          message="End this session?"
+        />
       </View>
-      <CustomModal
-        visible={showLogOut}
-        onConfirm={handleLogOutYES}
-        onClose={handleLogOutNO}
-        title="Log Out"
-        message="End this session?"
-      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    maxHeight: '100%',
-    maxWidth: '100%',
-    width: '100%',
+    width: windowWidth,
     paddingVertical: 10,
     paddingHorizontal: 15,
     backgroundColor: '#FFFFFF',
@@ -197,7 +217,7 @@ const styles = StyleSheet.create({
   inputGroup: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'left',
+    // justifyContent: 'left',
     alignItems: 'center',
     borderRadius: 20,
     borderColor: '#8D8D8D',
@@ -236,12 +256,12 @@ const styles = StyleSheet.create({
     marginVertical: '2%',
   },
   footer: {
-    padding: '2%',
+    // padding: '2%',
   },
   buttonLogOut: {
     alignSelf: 'center',
-    paddingVertical: '3%',
-    paddingHorizontal: '8%',
+    paddingVertical: windowHeight * 0.02,
+    paddingHorizontal: windowWidth * 0.05,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: 'red',

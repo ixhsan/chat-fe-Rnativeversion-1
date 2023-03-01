@@ -6,7 +6,8 @@ import {
   Dimensions,
 } from 'react-native';
 import React from 'react';
-import {Icon} from 'react-native-elements';
+import CustomIcons from './CustomIcon';
+// import {Icon} from 'react-native-elements';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -29,7 +30,7 @@ const ContactItem = ({
     <>
       <TouchableOpacity style={styles.contactItem} onPress={handleSelectItem}>
         <View style={styles.contactName}>
-          <Icon
+          <CustomIcons
             name="person"
             size={32}
             color={'white'}
@@ -64,9 +65,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: 'purple',
+    // borderStyle: 'solid',
+    // borderWidth: 1,
+    // borderColor: 'purple',
   },
   contactIcon: {
     padding: 5,

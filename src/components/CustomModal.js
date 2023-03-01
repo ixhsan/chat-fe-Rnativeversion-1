@@ -1,5 +1,14 @@
 import React from 'react';
-import {Modal, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {
+  Modal,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
+
+const {width, height, scale} = Dimensions.get('window');
 
 const CustomModal = ({visible, onClose, title, message, onConfirm, value}) => {
   return (
@@ -66,7 +75,7 @@ const styles = StyleSheet.create({
   valueContainer: {
     backgroundColor: '#2196F3',
     padding: '5%',
-    borderRadius: '10%',
+    borderRadius: scale * 0.8,
   },
   buttonContainer: {
     flexDirection: 'row',
